@@ -3,12 +3,11 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './tasks.model';
@@ -35,14 +34,14 @@ export class TasksController {
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
   createTask(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.createTask(createTaskDto);
   }
 
   @Delete('/:id')
-  deleteTaskById(@Param('id') id: number): void {
-    return this.tasksService.deleteTaskById(id);
+  deleteTaskById(@Param('id') id: string): void {
+    const idInt = parseInt(id, 10);
+    return this.tasksService.deleteTaskById(idInt);
   }
 
   @Patch('/:id/status')
